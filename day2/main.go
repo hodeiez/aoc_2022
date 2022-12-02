@@ -19,12 +19,17 @@ func main() {
 	lines := strings.Split(string(input), "\r\n")
 	myScore := 0
 	for _, pair := range lines {
-		myScore += evaluateRound(pair)
+		myScore += evaluateRound(pair, score)
 	}
-	fmt.Println(myScore)
+	fmt.Println("part1: ", myScore)
+	myScore = 0
+	for _, pair := range lines {
+		myScore += evaluateRound(pair, score2)
+	}
+	fmt.Println("part2: ", myScore)
 }
-func evaluateRound(pair string) int {
-	return score(strings.Split(pair, " "))
+func evaluateRound(pair string, scoreF func([]string) int) int {
+	return scoreF(strings.Split(pair, " "))
 }
 
 func setType(str string) hand {
@@ -44,30 +49,38 @@ func score(pair []string) int {
 	me := setType(pair[1])
 	iWon := int(me) + 6
 	looser := int(me)
+	draw := int(elf) + 3
 	if elf == me {
-		return int(me) + 3
-	} else if me == S {
-		if elf == P {
-			return iWon
-		} else {
-			return looser
-		}
-	} else if me == R {
-		if elf == S {
-			return iWon
-		} else {
-			return looser
-		}
-
-	} else if me == P {
-		if elf == R {
-			return iWon
-		} else {
-			return looser
-		}
+		return draw
+	} else if me == S && elf == P || me == R && elf == S || me == P && elf == R {
+		return iWon
+	} else {
+		return looser
 	}
-	return int(me)
-	/*
+}
 
-	 */
+//part 2 X(R) lose, Y(P) draw, Z(S) win
+func score2(pair []string) int {
+	elf := setType(pair[0])
+	me := setType(pair[1])
+	draw := int(elf) + 3
+	if me == R { //lose
+		if elf == R {
+			return int(S)
+		} else if elf == P {
+			return int(R)
+		}
+		return int(P)
+	} else if me == S { //win
+		if elf == R {
+			return int(P) + 6
+		} else if elf == P {
+			return int(S) + 6
+		}
+		return int(R) + 6
+	} else {
+		return draw
+
+	}
+
 }
