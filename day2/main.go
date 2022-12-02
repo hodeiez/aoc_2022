@@ -16,17 +16,15 @@ const (
 
 func main() {
 	input, _ := ioutil.ReadFile("input.txt")
-	lines := strings.Split(string(input), "\r\n")
-	myScore := 0
-	for _, pair := range lines {
-		myScore += evaluateRound(pair, score)
+	myScore1 := 0
+	myScore2 := 0
+	for _, pair := range strings.Split(string(input), "\r\n") {
+		myScore1 += evaluateRound(pair, score)
+		myScore2 += evaluateRound(pair, score2)
 	}
-	fmt.Println("part1: ", myScore)
-	myScore = 0
-	for _, pair := range lines {
-		myScore += evaluateRound(pair, score2)
-	}
-	fmt.Println("part2: ", myScore)
+
+	fmt.Println("part1: ", myScore1)
+	fmt.Println("part2: ", myScore2)
 }
 func evaluateRound(pair string, scoreF func([]string) int) int {
 	return scoreF(strings.Split(pair, " "))
@@ -44,6 +42,8 @@ func setType(str string) hand {
 		return R
 	}
 }
+
+//part1
 func score(pair []string) int {
 	elf := setType(pair[0])
 	me := setType(pair[1])
