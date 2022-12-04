@@ -40,11 +40,14 @@ public class day3 {
 
         Pattern path = Pattern.compile("[" + line1 + "]");
         Matcher matcher = path.matcher(line2);
-        List<String> temp = new ArrayList<String>();
+
+        StringBuilder temp = new StringBuilder();
         while (matcher.find()) {
-            temp.add(matcher.group());
+            temp.append(matcher.group());
+
         }
-        return temp.stream().map(Object::toString).collect(Collectors.joining(""));
+        return temp.toString();
+
     }
 
     public static String find(String line) {
