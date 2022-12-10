@@ -21,8 +21,6 @@ defmodule Day5elix do
         |> List.flatten()
         |> Enum.group_by(fn {_hitz, index} -> index + 1 end, fn {hitz, _index} -> hitz end)
 
-      # |> Enum.to_list()
-
       m =
         m
         |> String.split("\r\n")
@@ -44,13 +42,21 @@ defmodule Day5elix do
       %{c: c, m: m}
     end
 
-    def moveOne(a, track_n_to, track_n_from, amount) do
+    def is_part_2(is_part2, elements) do
+      if(is_part2 == true) do
+        Enum.reverse(elements)
+      else
+        elements
+      end
+    end
+
+    def moveOne(a, track_n_to, track_n_from, amount, is_part2) do
       m_to = Kernel.elem(Enum.at(a, track_n_to), 1)
       m_from = Kernel.elem(Enum.at(a, track_n_from), 1)
-      get_last_el = Enum.at(m_from, 0)
+      get_last_el = is_part_2(is_part2, Enum.take(m_from, amount))
       # move slow way
-      m_to = Enum.reverse(m_to) ++ [get_last_el]
-      m_from = m_from -- [get_last_el]
+      m_to = Enum.reverse(m_to) ++ get_last_el
+      m_from = m_from -- get_last_el
 
       new_from = a |> Enum.at(track_n_from) |> Kernel.put_elem(1, m_from)
       new_to = a |> Enum.at(track_n_to) |> Kernel.put_elem(1, Enum.reverse(m_to))
@@ -59,19 +65,10 @@ defmodule Day5elix do
         Map.put(a, track_n_from + 1, Kernel.elem(new_from, 1))
         |> Map.put(track_n_to + 1, Kernel.elem(new_to, 1))
 
-      amount = amount - 1
-      # IO.inspect(a)
-      # IO.inspect(new_a)
-
-      if(amount === 0) do
-        new_a
-      else
-        # new_a
-        moveOne(new_a, track_n_to, track_n_from, amount)
-      end
+      new_a
     end
 
-    def operate(data, movements1) do
+    def operate(data, movements1, is_part2) do
       movements = Enum.at(movements1, 0)
 
       result =
@@ -79,38 +76,33 @@ defmodule Day5elix do
           data,
           Map.get(movements, :to) - 1,
           Map.get(movements, :from) - 1,
-          Map.get(movements, :amount)
+          Map.get(movements, :amount),
+          is_part2
         )
 
       if(Enum.count(movements1) == 1) do
         result
       else
         new_m = List.delete_at(movements1, 0)
-        # new_movements = Enum.at(new_m, 0)
-        operate(result, new_m)
-        # moveOne(
-        #   result,
-        #   Map.get(new_movements, :to) - 1,
-        #   Map.get(new_movements, :from) - 1,
-        #   Map.get(new_movements, :amount)
-        # )
-
-        # new_movements
+        operate(result, new_m, is_part2)
       end
     end
   end
 
   a = Help.get_lines("input.txt")
 
-  Help.moveOne(Map.get(a, :c), 0, 1, 2)
-  result = Help.operate(Map.get(a, :c), Map.get(a, :m))
-
-  message =
-    Map.to_list(result)
+  message_part1 =
+    Map.to_list(Help.operate(Map.get(a, :c), Map.get(a, :m), false))
     |> Enum.map(fn {_, x} -> x end)
     |> Enum.map_join(fn x -> Enum.at(x, 0) end)
 
-  IO.inspect(message)
+  message_part2 =
+    Map.to_list(Help.operate(Map.get(a, :c), Map.get(a, :m), true))
+    |> Enum.map(fn {_, x} -> x end)
+    |> Enum.map_join(fn x -> Enum.at(x, 0) end)
+
+  IO.inspect(message_part1)
+  IO.inspect(message_part2)
 
   def hello do
     :world
