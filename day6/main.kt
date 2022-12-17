@@ -1,10 +1,11 @@
 import java.io.File
 
 fun main() {
+    val input = File("input.txt").readLines()[0]
     // part1
-    println(find(File("input.txt").readLines()[0], 0, 4, 4))
+    println(find(input, 0, 4, 4))
     // part2
-    println(find(File("input.txt").readLines()[0], 0, 14, 14))
+    println(find(input, 0, 14, 14))
 }
 
 fun find(el: String, rangeStart: Int, rangeEnd: Int, range: Int): Int {

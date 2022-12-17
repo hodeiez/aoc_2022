@@ -7,3 +7,4 @@ trying to solve the problems using different languages and frameworks
 - day4 -> python
 - day5 -> elixir
 - day6 -> kotlin
+- day7 -> rust
