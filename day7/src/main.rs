@@ -30,7 +30,20 @@ fn main() {
     */
     */
 
-    print!("{:?}", parsing_1("test.txt").expect("error!!!"));
+    print!("{:?}", summing(parsing_1("test.txt").expect("error!!!")));
+}
+fn summing(the_map: HashMap<String, Vec<String>>) -> io::Result<i32> {
+    let result = the_map.get("a").unwrap().to_vec();
+    let bla: Vec<i32> = result
+        .into_iter()
+        .filter(|x| x.chars().next().unwrap().is_numeric())
+        .map(|z| z.to_string().split_at(z.find(" ").unwrap()).0.to_owned())
+        .map(|y| y.parse::<i32>().unwrap().to_owned())
+        .collect();
+    let sum = bla.into_iter().sum();
+    Ok(sum)
+    // Ok(bla)
+    // let _result = the_map.get_key_value("e");
 }
 fn parsing_1(file_name: &str) -> io::Result<HashMap<String, Vec<String>>> {
     let mut the_map: HashMap<String, Vec<String>> = HashMap::new();
